@@ -1,24 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const BandList = () => {
-    const crearRows = () => {
-        return (
-            <tr>
-                <td>
-                    <button> +1</button>
-                </td>
-                <td>
-                    <input />
-                </td>
-                <td><h3>15</h3></td>
-                <td><button>borrar</button></td>
-            </tr>
-        )
-    }
+const BandList = ({ data }) => {
+  const [bands, setbands] = useState([]);
+  useEffect(() => {
+    setbands(data);
+  }, [data]);
+  console.log(bands)
+
+  const crearRows = () => {
+    return bands.map((band) => (
+      <tr key={band.id}>
+        <td>
+          <button> +1</button>
+        </td>
+        <td>
+          <input placeholder={band.name} />
+        </td>
+        <td>
+          <h3>15</h3>
+        </td>
+        <td>
+          <button>borrar</button>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
-    <h3>bandas actuales</h3>
+      <h3>bandas actuales</h3>
       <table>
         <thead>
           <tr>
