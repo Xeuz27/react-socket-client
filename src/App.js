@@ -14,6 +14,7 @@ const connectSocketServer = () => {
 function App() {
   const [socket, setSocket] = useState(connectSocketServer());
   const [online, setOnline] = useState(false);
+  const [bands, setBands] = useState([])
   useEffect(() => {
     setOnline(socket.connected);
   }, [socket]);
@@ -28,10 +29,17 @@ function App() {
       setOnline(false);
     });
   }, [socket]);
+  useEffect(() => {
+    socket.on("current-bands", (bands) => {
+      setBands(bands)
+    });
+  }, [socket]);
+
+
 
   return (
     <div className="container">
-      <div class="alert ml-8">
+      <div className="alert ml-8">
         <p>
           status:{" "}
           {online ? (
@@ -47,7 +55,7 @@ function App() {
 
       <div className="flex ml-8">
         <div className="p-4 w-[60%] border border-solid border-red-500">
-          <BandList />
+          <BandList data={bands} />
         </div>
         <div className="p-4 w-[40%] border-red-500 border-solid border">
           <BandAdd />
