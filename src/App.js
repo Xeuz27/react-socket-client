@@ -15,6 +15,7 @@ function App() {
   const [socket, setSocket] = useState(connectSocketServer());
   const [online, setOnline] = useState(false);
   const [bands, setBands] = useState([])
+
   useEffect(() => {
     setOnline(socket.connected);
   }, [socket]);
@@ -34,6 +35,20 @@ function App() {
       setBands(bands)
     });
   }, [socket]);
+
+  const votar = (id) => {
+    socket.emit('votar-banda', id)
+  }
+  const borrarBanda = (id) => {
+    console.log('borrando banda', id)
+    socket.emit('borrar-banda', id)
+  }
+  const cambiarNombre = (id, nombre) => {
+    socket.emit('cambiar-nombre-banda', {id, nombre})
+  }
+  const addBand = (nombre) => {
+    socket.emit('add-band', nombre)
+  }
 
 
 
@@ -55,10 +70,10 @@ function App() {
 
       <div className="flex ml-8">
         <div className="p-4 w-[60%] border border-solid border-red-500">
-          <BandList data={bands} />
+          <BandList data={bands} votar={votar} borrarBanda={borrarBanda} cambiarNombre={cambiarNombre} />
         </div>
         <div className="p-4 w-[40%] border-red-500 border-solid border">
-          <BandAdd />
+          <BandAdd addBand={addBand} />
         </div>
       </div>
     </div>
