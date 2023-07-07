@@ -1,26 +1,46 @@
 import React, { useEffect, useState } from "react";
 
-const BandList = ({ data }) => {
-  const [bands, setbands] = useState([]);
+const BandList = ({ data, votar, borrarBanda, cambiarNombre }) => {
+  const [bands, setbands] = useState(data);
   useEffect(() => {
     setbands(data);
   }, [data]);
-  console.log(bands)
+  const cambioNombre = (event, id) => {
+    const nuevoNombre = event.target.value;
+    setbands((bands) =>
+      bands.map((band) => {
+        if (band.id === id) {
+          band.name = nuevoNombre;
+        }
+        return band;
+      })
+    );
+  };
+  const onPerdioFocus = (id, nombre) => {
+    cambiarNombre(id,nombre)
+  };
 
   const crearRows = () => {
     return bands.map((band) => (
       <tr key={band.id}>
         <td>
-          <button> +1</button>
+          <button
+            onClick={()=>votar(band.id)}
+          > +1</button>
         </td>
         <td>
-          <input placeholder={band.name} />
+          <input
+            placeholder={band.name}
+            on
+            onChange={(event) => cambioNombre(event, band.id)}
+            onBlur={() => onPerdioFocus(band.id, band.name)}
+          />
         </td>
         <td>
-          <h3>15</h3>
+          <h3>{band.votes}</h3>
         </td>
         <td>
-          <button>borrar</button>
+          <button onClick={() => borrarBanda(band.id)}>borrar</button>
         </td>
       </tr>
     ));
