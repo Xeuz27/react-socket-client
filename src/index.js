@@ -1,8 +1,9 @@
-import App from './App';
+import BandNamesApp from './BandNamesApp';
 import React from 'react';
-import ReactDOM from 'react-dom/client';;
+import ReactDOM from 'react-dom/client';
+;
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <App />
+    <BandNamesApp />
 );
