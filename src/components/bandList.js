@@ -25,22 +25,25 @@ const BandList = ({ data, votar, borrarBanda, cambiarNombre }) => {
       <tr key={band.id}>
         <td>
           <button
+            className="m-4 px-4 py-1 bg-sky-600 rounded border-1 border-sky-950 text-white text-md font-bold
+            "
             onClick={()=>votar(band.id)}
-          > +1</button>
+          >Votar +1</button>
         </td>
         <td>
           <input
+          className="text-center text-stone-950 font-bold placeholder:text-slate-400 border border-sky-950 py-1"
             placeholder={band.name}
             on
             onChange={(event) => cambioNombre(event, band.id)}
             onBlur={() => onPerdioFocus(band.id, band.name)}
           />
         </td>
-        <td>
+        <td className="mr-4 font-bold">
           <h3>{band.votes}</h3>
         </td>
         <td>
-          <button onClick={() => borrarBanda(band.id)}>borrar</button>
+          <button className="p-4 py-1 rounded-lg bg-red-400 font-bold text-sm" onClick={() => borrarBanda(band.id)}>Borrar</button>
         </td>
       </tr>
     ));
@@ -48,14 +51,14 @@ const BandList = ({ data, votar, borrarBanda, cambiarNombre }) => {
 
   return (
     <>
-      <h3>bandas actuales</h3>
-      <table>
+      <h3 className="text-center text-xl">bandas actuales</h3>
+      <table className="text-center w-4/5 mx-auto">
         <thead>
           <tr>
-            <th>#</th>
+            <th># de Votos</th>
             <th>Band Name</th>
-            <th> votos</th>
-            <th> borrar</th>
+            <th>votos</th>
+            <th>{''}</th>
           </tr>
         </thead>
         <tbody>{crearRows()}</tbody>
