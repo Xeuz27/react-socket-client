@@ -1,25 +1,28 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { SocketContext } from "../context/SocketContext";
 
-const BandAdd = ({addBand}) => {
-  const [name, setName] = useState('')
+const BandAdd = () => {
+  const [name, setName] = useState("");
+  const { socket } = useContext(SocketContext);
+
   const onSubmit = (e) => {
-    e.preventDefault()
-    if (name.trim().length > 0){
-      addBand( name ) //llamada al action creator para enviar la accion a
+    e.preventDefault();
+    if (name.trim().length > 0) {
+      socket.emit("add-band", name);
     }
-    setName('')
-  }
-  
+    setName("");
+  };
+
   return (
     <>
-      <h3> agregar banda </h3>
+      <h3 className="pl-4 text-lg font-medium"> Agregar banda </h3>
       <form onSubmit={onSubmit}>
         <input
-         className="" 
-         placeholder="nombre de nueva banda"
-         value={name}
-         onChange={(e) =>setName(e.target.value)}
-         />
+          className="py-1 px-2 border border-sky-950"
+          placeholder="nombre de nueva banda"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
       </form>
     </>
   );
