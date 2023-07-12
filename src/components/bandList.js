@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { SocketContext } from "../context/SocketContext";
 
-const BandList = ({ data, votar, borrarBanda, cambiarNombre }) => {
-  const [bands, setbands] = useState(data);
+const BandList = () => {
+  const [bands, setbands] = useState([]);
+  const { socket } = useContext(SocketContext);
+
   useEffect(() => {
-    setbands(data);
-  }, [data]);
+    socket.on("current-bands", (bands) => {
+      setbands(bands);
+    });
+    return () => socket.off("current-bands");
+  }, [socket]);
+  
   const cambioNombre = (event, id) => {
     const nuevoNombre = event.target.value;
     setbands((bands) =>
@@ -16,10 +23,17 @@ const BandList = ({ data, votar, borrarBanda, cambiarNombre }) => {
       })
     );
   };
-  const onPerdioFocus = (id, nombre) => {
-    cambiarNombre(id,nombre)
-  };
 
+  const onPerdioFocus = (id, nombre) => {
+    socket.emit("cambiar-nombre-banda", { id, nombre });
+  };  
+  const votar = (id) => {
+    socket.emit("votar-banda", id);
+  };  
+  const borrarBanda = (id) => {
+    console.log("borrando banda", id);
+    socket.emit("borrar-banda", id);
+  };  
   const crearRows = () => {
     return bands.map((band) => (
       <tr key={band.id}>
@@ -27,12 +41,14 @@ const BandList = ({ data, votar, borrarBanda, cambiarNombre }) => {
           <button
             className="m-4 px-4 py-1 bg-sky-600 rounded border-1 border-sky-950 text-white text-md font-bold
             "
-            onClick={()=>votar(band.id)}
-          >Votar +1</button>
+            onClick={() => votar(band.id)}
+          >
+            Votar +1
+          </button>
         </td>
         <td>
           <input
-          className="text-center text-stone-950 font-bold placeholder:text-slate-400 border border-sky-950 py-1"
+            className="text-center text-stone-950 font-bold placeholder:text-slate-400 border border-sky-950 py-1"
             placeholder={band.name}
             on
             onChange={(event) => cambioNombre(event, band.id)}
@@ -43,7 +59,12 @@ const BandList = ({ data, votar, borrarBanda, cambiarNombre }) => {
           <h3>{band.votes}</h3>
         </td>
         <td>
-          <button className="p-4 py-1 rounded-lg bg-red-400 font-bold text-sm" onClick={() => borrarBanda(band.id)}>Borrar</button>
+          <button
+            className="p-4 py-1 rounded-lg bg-red-400 font-bold text-sm"
+            onClick={() => borrarBanda(band.id)}
+          >
+            Borrar
+          </button>
         </td>
       </tr>
     ));
@@ -58,7 +79,7 @@ const BandList = ({ data, votar, borrarBanda, cambiarNombre }) => {
             <th># de Votos</th>
             <th>Band Name</th>
             <th>votos</th>
-            <th>{''}</th>
+            <th>{""}</th>
           </tr>
         </thead>
         <tbody>{crearRows()}</tbody>
